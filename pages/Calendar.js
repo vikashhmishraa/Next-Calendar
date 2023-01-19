@@ -14,6 +14,9 @@ import {
   parse,
   parseISO,
   startOfToday,
+  startOfWeek,
+  endOfWeek,
+  startOfMonth,
 } from 'date-fns'
 import { Fragment, useState } from 'react'
 
@@ -33,8 +36,8 @@ export default function Example() {
   let firstDayCurrentMonth = parse(currentMonth, 'MMM-yyyy', new Date())
 
   let days = eachDayOfInterval({
-    start: firstDayCurrentMonth,
-    end: endOfMonth(firstDayCurrentMonth),
+    start: startOfWeek(firstDayCurrentMonth),
+    end: endOfWeek(endOfMonth(firstDayCurrentMonth)),
   })
 
   function previousMonth() {
@@ -51,17 +54,20 @@ export default function Example() {
     isSameDay(parseISO(meeting.startDatetime), selectedDay)
   )
 
-    // let newDays = eachDayofInterval({
-    // start: start0fMonth(today), 
-    // end: endofweek (endOfMonth (today)),
-    // })
+
+  let newDays = eachDayOfInterval({
+    start: startOfMonth(today), 
+    end: endOfMonth(endOfMonth (today)),
+    })
+   
 
   return (
-    <div className="pt-16">
-
-      <div className="max-w-md px-4 mx-auto sm:px-7 md:max-w-4xl md:px-6 justify-center items-center">
+    <>
+    <div className='max-w-[90%]' style={{width:"700px"}}>
+         <div className="pt-16" >
+      <div className="max-w-md px-4 mx-auto sm:px-2 md:max-w-4xl md:px-6 justify-center items-center">
         <div className="md:grid md:grid-cols-2 md:divide-x md:divide-gray-200 justify-center items-center">
-          <div className="border-2 rounded-xl p-10 justify-center items-center ">
+          <div className="border-2 rounded-xl justify-center items-center p-5 ">
             <div className="flex items-center">
               <h2 className="flex-auto font-semibold text-gray-900">
                 {format(firstDayCurrentMonth, 'MMMM yyyy')}
@@ -97,6 +103,7 @@ export default function Example() {
                 <div
                   key={day.toString()}
                   className={classNames(
+                    dayIdx === 6 && "border-t border-gray-200",
                     dayIdx === 0 && colStartClasses[getDay(day)],
                     'py-1.5'
                   )}
@@ -143,7 +150,7 @@ export default function Example() {
               ))}
             </div>
           </div>
-          <section className="mt-12 md:mt-0 md:pl-14 ml-5">
+          {/* <section className="mt-12 md:mt-0 md:pl-14 ml-5">
             <h2 className="font-semibold text-gray-900">
               Schedule for{' '}
               <time dateTime={format(selectedDay, 'yyyy-MM-dd')}>
@@ -159,91 +166,93 @@ export default function Example() {
                 <p>Hello Bhuvika Ma'am</p>
               )}
             </ol>
-          </section>
+          </section> */}
         </div>
       </div>
+          </div>
     </div>
+    </>
   )
 }
 
-function Meeting({ meeting }) {
-  let startDateTime = parseISO(meeting.startDatetime)
-  let endDateTime = parseISO(meeting.endDatetime)
+// function Meeting({ meeting }) {
+//   let startDateTime = parseISO(meeting.startDatetime)
+//   let endDateTime = parseISO(meeting.endDatetime)
 
-  return (
-    <li className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-gray-100">
-      <img
-        src={meeting.imageUrl}
-        alt=""
-        className="flex-none w-10 h-10 rounded-full"
-      />
-      <div className="flex-auto">
-        <p className="text-blue-900">{meeting.name}</p>
-        <p className="mt-0.5">
-          <time dateTime={meeting.startDatetime}>
-            {format(startDateTime, 'h:mm a')}
-          </time>{' '}
-          -{' '}
-          <time dateTime={meeting.endDatetime}>
-            {format(endDateTime, 'h:mm a')}
-          </time>
-        </p>
-      </div>
-      <Menu
-        as="div"
-        className="relative opacity-0 focus-within:opacity-100 group-hover:opacity-100"
-      >
-        <div>
-          <Menu.Button className="-m-2 flex items-center rounded-full p-1.5 text-gray-500 hover:text-gray-600">
-            <span className="sr-only">Open options</span>
-            <DotsVerticalIcon className="w-6 h-6" aria-hidden="true" />
-          </Menu.Button>
-        </div>
+//   return (
+//     <li className="flex items-center px-4 py-2 space-x-4 group rounded-xl focus-within:bg-gray-100 hover:bg-gray-100">
+//       <img
+//         src={meeting.imageUrl}
+//         alt=""
+//         className="flex-none w-10 h-10 rounded-full"
+//       />
+//       <div className="flex-auto">
+//         <p className="text-blue-900">{meeting.name}</p>
+//         <p className="mt-0.5">
+//           <time dateTime={meeting.startDatetime}>
+//             {format(startDateTime, 'h:mm a')}
+//           </time>{' '}
+//           -{' '}
+//           <time dateTime={meeting.endDatetime}>
+//             {format(endDateTime, 'h:mm a')}
+//           </time>
+//         </p>
+//       </div>
+//       <Menu
+//         as="div"
+//         className="relative opacity-0 focus-within:opacity-100 group-hover:opacity-100"
+//       >
+//         <div>
+//           <Menu.Button className="-m-2 flex items-center rounded-full p-1.5 text-gray-500 hover:text-gray-600">
+//             <span className="sr-only">Open options</span>
+//             <DotsVerticalIcon className="w-6 h-6" aria-hidden="true" />
+//           </Menu.Button>
+//         </div>
 
-        <Transition
-          as={Fragment}
-          enter="transition ease-out duration-100"
-          enterFrom="transform opacity-0 scale-95"
-          enterTo="transform opacity-100 scale-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="transform opacity-100 scale-100"
-          leaveTo="transform opacity-0 scale-95"
-        >
-          <Menu.Items className="absolute right-0 z-10 mt-2 origin-top-right bg-white rounded-md shadow-lg w-36 ring-1 ring-blue-500 ring-opacity-5 focus:outline-none">
-            <div className="py-1">
-              <Menu.Item>
-                {({ active }) => (
-                  <a
-                    href="#"
-                    className={classNames(
-                      active ? 'bg-gray-100 text-blue-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm'
-                    )}
-                  >
-                    Edit
-                  </a>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <a
-                    href="#"
-                    className={classNames(
-                      active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
-                      'block px-4 py-2 text-sm'
-                    )}
-                  >
-                    Cancel
-                  </a>
-                )}
-              </Menu.Item>
-            </div>
-          </Menu.Items>
-        </Transition>
-      </Menu>
-    </li>
-  )
-}
+//         <Transition
+//           as={Fragment}
+//           enter="transition ease-out duration-100"
+//           enterFrom="transform opacity-0 scale-95"
+//           enterTo="transform opacity-100 scale-100"
+//           leave="transition ease-in duration-75"
+//           leaveFrom="transform opacity-100 scale-100"
+//           leaveTo="transform opacity-0 scale-95"
+//         >
+//           <Menu.Items className="absolute right-0 z-10 mt-2 origin-top-right bg-white rounded-md shadow-lg w-36 ring-1 ring-blue-500 ring-opacity-5 focus:outline-none">
+//             <div className="py-1">
+//               <Menu.Item>
+//                 {({ active }) => (
+//                   <a
+//                     href="#"
+//                     className={classNames(
+//                       active ? 'bg-gray-100 text-blue-900' : 'text-gray-700',
+//                       'block px-4 py-2 text-sm'
+//                     )}
+//                   >
+//                     Edit
+//                   </a>
+//                 )}
+//               </Menu.Item>
+//               {/* <Menu.Item>
+//                 {({ active }) => (
+//                   <a
+//                     href="#"
+//                     className={classNames(
+//                       active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+//                       'block px-4 py-2 text-sm'
+//                     )}
+//                   >
+//                     Cancel
+//                   </a>
+//                 )}
+//               </Menu.Item> */}
+//             </div>
+//           </Menu.Items>
+//         </Transition>
+//       </Menu>
+//     </li>
+//   )
+// }
 
 let colStartClasses = [
   '',
@@ -254,3 +263,7 @@ let colStartClasses = [
   'col-start-6',
   'col-start-7',
 ]
+
+
+
+

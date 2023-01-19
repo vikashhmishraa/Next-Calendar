@@ -5,9 +5,8 @@ import Calendar from './Calendar'
 export const index = () => {
   return (
     <>
-    <Calendar />
     <div>
-      Hello 
+    <Calendar />
     </div>
     
     </>
